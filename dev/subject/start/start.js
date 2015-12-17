@@ -1,4 +1,4 @@
-Redwood.controller("SubjectCtrl", ["$rootScope", "$scope", "RedwoodSubject", function($rootScope, $scope, rs) {
+Redwood.controller("SubjectCtrl", ["$rootScope", "$scope", "RedwoodSubject", "SynchronizedStopWatch", function($rootScope, $scope, rs, SynchronizedStopWatch) {
 
   $scope.messages = [];
   $scope.count = 0;
@@ -14,11 +14,21 @@ Redwood.controller("SubjectCtrl", ["$rootScope", "$scope", "RedwoodSubject", fun
 		});
 
 		$scope.matrix = $scope.user_index === 0 ? rs.config.matrix : transpose(rs.config.matrix);
+    $scope.play = rs.config.messaging;
 
 		$scope.round = 0;
+    $scope.chatEnabled = false;
 
 		rs.synchronizationBarrier('on_load').then(function() {
-			rs.trigger("next_round"); //Start first round
+      if ($scope.play === "preplay") {
+        $scope.chatEnabled = true;
+        SynchronizedStopWatch.instance()
+          .duration(20).onComplete(function() {
+          rs.trigger("next_round");
+        }).start();
+      } else {
+			  rs.trigger("next_round"); //Start first round
+      }
 		});
 	});
 
@@ -76,6 +86,7 @@ Redwood.controller("SubjectCtrl", ["$rootScope", "$scope", "RedwoodSubject", fun
   });
 
 	rs.on("next_round", function() {
+    if ($scope.chatEnabled) $scope.chatEnabled = false;
 		$scope.round++;
 		$scope.rounds = $.isArray(rs.config.rounds) ? rs.config.rounds[$scope.pair_index] : rs.config.rounds;
 
@@ -83,7 +94,15 @@ Redwood.controller("SubjectCtrl", ["$rootScope", "$scope", "RedwoodSubject", fun
 		$scope.prevPartnerAction = $scope.partnerAction;
 
 		if($scope.round > $scope.rounds) {
-			rs.next_period(5);
+      if ($scope.play === "postplay") {
+        $scope.chatEnabled = true;
+        SynchronizedStopWatch.instance()
+          .duration(20).onComplete(function() {
+          rs.next_period(5);
+        }).start();
+      } else {
+        rs.next_period(5);
+      }
 		} else {
 			$scope.inputsEnabled = true;
 		}

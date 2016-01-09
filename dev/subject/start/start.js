@@ -1,6 +1,7 @@
 Redwood.controller("SubjectCtrl", ["$rootScope", "$scope", "RedwoodSubject", "SynchronizedStopWatch", function($rootScope, $scope, rs, SynchronizedStopWatch) {
 
   $scope.messages = [];
+  $scope.message = "";
   $scope.count = 0;
 
   rs.on_load(function() {

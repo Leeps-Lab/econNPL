@@ -20,13 +20,25 @@ Redwood.controller("SubjectCtrl", ["$rootScope", "$scope", "RedwoodSubject", "Sy
     $scope.chatEnabled = false;
 
 		rs.synchronizationBarrier('on_load').then(function() {
+      $scope.periodinseconds = rs.config.periodinseconds ? rs.config.periodinseconds : 20;
       if ($scope.play === "preplay") {
+        $scope.timeleft = $scope.periodinseconds;
         $scope.chatEnabled = true;
+        $("#decision").addClass("disabled");
+        $("#communicate").addClass("enabled");
         SynchronizedStopWatch.instance()
-          .duration(20).onComplete(function() {
-          rs.trigger("next_round");
+          .duration($scope.periodinseconds)
+          .frequency(1).onTick(function() {
+            $scope.timeleft = $scope.timeleft - 1;
+          })
+          .onComplete(function() {
+            $("#decision").removeClass("disabled").addClass("enabled");
+            $("#communicate").removeClass("enabled").addClass("disabled");
+            rs.trigger("next_round");
         }).start();
       } else {
+        $("#decision").addClass("enabled");
+        $("#communicate").addClass("disabled");
 			  rs.trigger("next_round"); //Start first round
       }
 		});
@@ -89,16 +101,26 @@ Redwood.controller("SubjectCtrl", ["$rootScope", "$scope", "RedwoodSubject", "Sy
     if ($scope.chatEnabled) $scope.chatEnabled = false;
 		$scope.round++;
 		$scope.rounds = $.isArray(rs.config.rounds) ? rs.config.rounds[$scope.pair_index] : rs.config.rounds;
+    if ($scope.play === "allplay") {
+      $("#communicate").removeClass("disabled").addClass("enabled");
+    }
 
 		$scope.prevAction = $scope.action;
 		$scope.prevPartnerAction = $scope.partnerAction;
 
 		if($scope.round > $scope.rounds) {
       if ($scope.play === "postplay") {
+        $("#decision").removeClass("enabled").addClass("disabled");
+        $("#communicate").removeClass("disabled").addClass("enabled");
         $scope.chatEnabled = true;
+        $scope.timeleft = $scope.periodinseconds
         SynchronizedStopWatch.instance()
-          .duration(20).onComplete(function() {
-          rs.next_period(5);
+          .duration($scope.periodinseconds)
+          .frequency(1).onTick(function() {
+            $scope.timeleft = $scope.timeleft - 1;
+          })
+          .onComplete(function() {
+            rs.next_period(5);
         }).start();
       } else {
         rs.next_period(5);

@@ -3,37 +3,40 @@ body {
 }
 
 .no-transition:hover{
-   -webkit-transition: none;
-   background-position: 0 0;
- }
+  -webkit-transition: none;
+  background-position: 0 0;
+}
 
- #input-matrix {
-   text-align: center;
-   vertical-align: middle !important;
- }
+#input-matrix {
+  text-align: center;
+  vertical-align: middle !important;
+}
 
- #input-matrix > tbody > tr > td {
-   text-align: center;
-   vertical-align: middle !important;
- }
+#input-matrix > tbody > tr > td {
+  text-align: center;
+  vertical-align: middle !important;
+}
 
- .input-cell {
-   padding: 0 !important;
-   width: 80px;
-   font-weight:bold;
- }
- td.selected {
-   background-image: url('/static/experiments/discreteMatrix/img/InputShadingLight.png');
- }
- td.double-selected {
-   background-image: url('/static/experiments/discreteMatrix/img/InputShadingDark.png');
- }
+.input-cell {
+  padding: 0 !important;
+  width: 80px;
+  font-weight:bold;
+}
+td.selected {
+  background-image: url('/static/experiments/discreteMatrix/img/InputShadingLight.png');
+}
+td.double-selected {
+  background-image: url('/static/experiments/discreteMatrix/img/InputShadingDark.png');
+}
 
 .input-link {
   display: block;
 }
 .disabled {
   color: grey;
+}
+.enabled {
+  color: green;
 }
 
 #results-table > tbody > tr > th {

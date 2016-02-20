@@ -1,4 +1,4 @@
-Redwood.controller("SubjectCtrl", ["$rootScope", "$scope", "RedwoodSubject", "SynchronizedStopWatch", function($rootScope, $scope, rs, SynchronizedStopWatch) {
+Redwood.controller("SubjectStartCtrl", ["$rootScope", "$scope", "RedwoodSubject", "SynchronizedStopWatch", function($rootScope, $scope, rs, SynchronizedStopWatch) {
 
   $scope.messages = [];
   $scope.message = "";
